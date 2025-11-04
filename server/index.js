@@ -20,14 +20,14 @@ app.use(morgan('dev'));
 
 //Routes
 
-app.use('/projects', projectRoutes);
-app.use('/users', userRoutes)
+app.use('/api/projects', projectRoutes);
+app.use('/api/users', userRoutes)
 
 app.use('/api/data', (req, res) => {
     res.json({ message: 'Hello from the API! Again' });
 });
 
 
-app.listen(3000);   
+app.listen(3000);
 
 console.log('Server running at http://localhost:3000/');
