@@ -1,4 +1,3 @@
-
 // src/AuthContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
 import { api } from "./api.js"; // use the shared axios instance
@@ -15,13 +14,12 @@ export function AuthProvider({ children }) {
       try {
         setUser(JSON.parse(savedUser));
       } catch {
-        // if parsing fails, clear bad data
         localStorage.removeItem("user");
       }
     }
   }, []);
 
-  // SIGN IN FUNCTION (Login.jsx calls this)
+  // ✅ SIGN IN FUNCTION (Login.jsx calls this)
   const signin = async (email, password) => {
     const res = await api.post("/auth/login", {
       email: email.trim().toLowerCase(),
@@ -56,3 +54,4 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   return useContext(AuthContext);
 }
+
