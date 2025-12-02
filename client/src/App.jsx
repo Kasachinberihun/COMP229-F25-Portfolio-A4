@@ -1,5 +1,4 @@
- 
- // src/App.jsx
+// src/App.jsx
 import { Routes, Route, Navigate, Link } from "react-router-dom";
 import "./App.css";
 
@@ -8,12 +7,13 @@ import ProjectDetails from "./components/project-details";
 import ProjectCreate from "./components/project-create";
 import ProjectEdit from "./components/project-edit";
 
-import Login from "./components/Login";
-import Signup from "./components/Signup";
+// ✅ FIXED — added .jsx extension
+import Login from "./components/Login.jsx";
+import Signup from "./components/Signup.jsx";
 
 import Education from "./pages/Education";
 import Contact from "./pages/Contact";
-import ContactAdmin from "./pages/ContactAdmin"; // 👈 admin messages page
+import ContactAdmin from "./pages/ContactAdmin";
 
 import { useAuth } from "./AuthContext";
 
@@ -37,8 +37,6 @@ function App() {
           <Link to="/projects">Projects</Link>
           <Link to="/education">Education</Link>
           <Link to="/contact">Contact</Link>
-
-          {/* Simple link to messages page so you can take screenshot */}
           <Link to="/contact/admin" style={{ fontSize: 12 }}>
             Contact Messages
           </Link>
@@ -59,15 +57,10 @@ function App() {
         </div>
       </nav>
 
-      {/* Routes */}
       <Routes>
-        {/* default redirect */}
         <Route path="/" element={<Navigate to="/projects" replace />} />
-
-        {/* projects list */}
         <Route path="/projects" element={<ProjectList />} />
 
-        {/* create project (admin only – still guarded) */}
         <Route
           path="/projects/new"
           element={
@@ -75,10 +68,8 @@ function App() {
           }
         />
 
-        {/* project details */}
         <Route path="/projects/:id" element={<ProjectDetails />} />
 
-        {/* edit project (admin only – still guarded) */}
         <Route
           path="/projects/:id/edit"
           element={
@@ -86,18 +77,14 @@ function App() {
           }
         />
 
-        {/* other pages */}
         <Route path="/education" element={<Education />} />
         <Route path="/contact" element={<Contact />} />
-
-        {/* admin contact messages page – NOT guarded, no token needed */}
         <Route path="/contact/admin" element={<ContactAdmin />} />
 
-        {/* auth */}
+        {/* Auth pages */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* fallback */}
         <Route path="*" element={<Navigate to="/projects" replace />} />
       </Routes>
     </div>
