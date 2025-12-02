@@ -1,4 +1,3 @@
-
 // server/routes/auth.js
 import express from "express";
 import bcrypt from "bcryptjs";
@@ -17,7 +16,7 @@ function signToken(user) {
   );
 }
 
-// POST /api/auth/signup
+// ✅ POST /api/auth/signup  (no token required)
 router.post("/signup", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -28,7 +27,9 @@ router.post("/signup", async (req, res) => {
 
     const existing = await User.findOne({ email: email.toLowerCase() });
     if (existing) {
-      return res.status(400).json({ message: "Email is already registered." });
+      return res
+        .status(400)
+        .json({ message: "Email is already registered." });
     }
 
     const hashed = await bcrypt.hash(password, 10);
@@ -58,7 +59,7 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-// POST /api/auth/login
+// ✅ POST /api/auth/login  (no token required)
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -91,7 +92,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// GET /api/auth/me (protected)
+// ✅ GET /api/auth/me (protected)
 router.get("/me", requireAuth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
