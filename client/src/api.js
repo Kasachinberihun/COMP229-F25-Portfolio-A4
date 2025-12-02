@@ -2,17 +2,18 @@
 // src/api.js
 import axios from "axios";
 
-// Use VITE_API_URL if it exists, otherwise fall back to localhost:4000
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
+// ✅ Use your deployed backend URL directly
+// If Render gives you a slightly different URL, update it here:
+const BASE_URL = "https://portfolio-backend-a4.onrender.com";
 
 // Create API instance
 export const api = axios.create({
-  // Final base URL will be e.g. http://localhost:4000/api
+  // Final base URL will be: https://portfolio-backend-a4.onrender.com/api
   baseURL: `${BASE_URL}/api`,
-  withCredentials: true, // OK to leave true, even if you don't use cookies yet
+  withCredentials: true, // ok to keep true
 });
 
-// Attach token to headers automatically
+// Attach token to headers automatically (used after login)
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -21,8 +22,6 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
