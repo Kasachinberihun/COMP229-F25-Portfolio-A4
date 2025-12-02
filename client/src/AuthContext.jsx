@@ -1,9 +1,9 @@
+
+// src/AuthContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
+import { api } from "./api.js"; // use the shared axios instance
 
-const AuthContext = createContext();
-
-const API_URL = "http://localhost:4000/api"; // backend URL
+const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -12,24 +12,30 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch {
+        // if parsing fails, clear bad data
+        localStorage.removeItem("user");
+      }
     }
   }, []);
 
-  // SIGN IN FUNCTION (this is what Login.jsx calls)
+  // SIGN IN FUNCTION (Login.jsx calls this)
   const signin = async (email, password) => {
-    const res = await axios.post(`${API_URL}/auth/signin`, {
-      email,
-      password,
+    const res = await api.post("/auth/login", {
+      email: email.trim().toLowerCase(),
+      password: password.trim(),
     });
 
     const { token, user } = res.data;
 
-    // Save login info
-    localStorage.setItem("token", token);
+    if (token) {
+      localStorage.setItem("token", token);
+    }
     localStorage.setItem("user", JSON.stringify(user));
-
     setUser(user);
+
     return user;
   };
 
@@ -50,4 +56,3 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   return useContext(AuthContext);
 }
-
