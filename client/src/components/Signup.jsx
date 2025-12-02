@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { api } from "../api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { api } from "../api.js";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -17,8 +17,8 @@ export default function Signup() {
     setSuccess("");
 
     try {
-      // 👇 Send the SAME fields as Postman:
-      // { "name": "...", "email": "...", "password": "..." }
+      // match your backend / Postman body:
+      // { name, email, password }
       const { data } = await api.post("/auth/signup", {
         name: name.trim(),
         email: email.trim().toLowerCase(),
@@ -28,7 +28,7 @@ export default function Signup() {
       console.log("Signup success:", data);
       setSuccess(data.message || "Account created successfully!");
 
-      // Redirect to login after a short delay
+      // redirect to login after short delay
       setTimeout(() => navigate("/login"), 1200);
     } catch (err) {
       console.error("Signup error:", err?.response?.data || err.message);
@@ -80,10 +80,9 @@ export default function Signup() {
       {success && <p style={{ color: "green" }}>{success}</p>}
 
       <p style={{ marginTop: 10 }}>
-        Already have an account? <a href="/login">Log in</a>
+        Already have an account?{" "}
+        <Link to="/login">Log in</Link>
       </p>
     </div>
   );
 }
-
-

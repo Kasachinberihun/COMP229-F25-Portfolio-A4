@@ -1,12 +1,12 @@
-
 import { useState } from "react";
-import { useAuth } from "../AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../AuthContext.jsx";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
   const { signin } = useAuth();
   const navigate = useNavigate();
 
@@ -20,7 +20,7 @@ export default function Login() {
 
       await signin(cleanEmail, cleanPassword);
 
-      // go to Projects page
+      // go to Projects page after successful login
       navigate("/projects");
     } catch (err) {
       setError(
@@ -60,6 +60,11 @@ export default function Login() {
       </form>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <p style={{ marginTop: 10 }}>
+        Don&apos;t have an account?{" "}
+        <Link to="/signup">Sign up</Link>
+      </p>
     </div>
   );
 }
