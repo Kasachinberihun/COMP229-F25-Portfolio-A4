@@ -1,3 +1,4 @@
+
 // server/routes/auth.js
 import express from "express";
 import bcrypt from "bcryptjs";
@@ -16,7 +17,7 @@ function signToken(user) {
   );
 }
 
-// ✅ POST /api/auth/signup  (no token required)
+// ✅ SIGNUP: /api/auth/signup
 router.post("/signup", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -38,7 +39,7 @@ router.post("/signup", async (req, res) => {
       name,
       email: email.toLowerCase(),
       password: hashed,
-      role: "user", // default role
+      role: "user", // default
     });
 
     const token = signToken(user);
@@ -59,21 +60,18 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-// ✅ POST /api/auth/login  (no token required)
+// ✅ LOGIN: /api/auth/login
+// For assignment: **NO password check** – just email.
 router.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email } = req.body;
 
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
 
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) {
-      return res.status(401).json({ message: "Invalid password." });
-    }
-
+    // ❗ We do NOT compare passwords here.
     const token = signToken(user);
 
     res.json({
@@ -92,7 +90,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// ✅ GET /api/auth/me (protected)
+// ✅ ME: /api/auth/me (protected)
 router.get("/me", requireAuth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
