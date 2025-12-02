@@ -3,19 +3,24 @@ import morgan from "morgan";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-import cookieParser from "cookie-parser";            // ✅ needed for req.cookies
+import cookieParser from "cookie-parser"; // needed for req.cookies
 
 dotenv.config();
 
 // ✅ Env checks
 const PORT = process.env.PORT || 4000;
-const mongoURI = process.env.MONGO_URI;              // make sure .env uses MONGO_URI
-const corsOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
+const mongoURI = process.env.MONGO_URI; // make sure .env uses MONGO_URI
 
 if (!mongoURI) {
   console.error("❌ ERROR: MONGO_URI is missing in your .env file");
   process.exit(1);
 }
+
+// ✅ Allowed CORS origins (local + deployed frontend)
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://kasachin-portfolio-a4.onrender.com",
+];
 
 // ✅ Connect to MongoDB
 mongoose
@@ -36,13 +41,21 @@ const app = express();
 // ✅ Global middleware (before routes)
 app.use(
   cors({
-    origin: corsOrigin,
+    origin: (origin, callback) => {
+      // allow non-browser tools (no origin) and allowed origins
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true, // allow cookies to be sent
   })
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());                              // ✅ this line is required
+app.use(cookieParser());
 app.use(morgan("dev"));
 
 // ✅ Mount routes
@@ -50,7 +63,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/education", educationRoutes);
-app.use("/api/contact", contactRoutes);               // ✅ singular: /api/contact
+app.use("/api/contact", contactRoutes); // singular: /api/contact
 
 // ✅ Simple test endpoint
 app.get("/api/data", (_req, res) => {
@@ -73,4 +86,3 @@ app.use((err, _req, res, _next) => {
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}/`);
 });
-
