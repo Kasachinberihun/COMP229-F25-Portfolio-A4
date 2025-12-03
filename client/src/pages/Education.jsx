@@ -1,4 +1,3 @@
-
 // src/pages/Education.jsx
 import { useState } from "react";
 
@@ -43,6 +42,19 @@ export default function Education() {
   return (
     <div style={{ maxWidth: 900, margin: "20px auto" }}>
       <h1>Education / Qualification</h1>
+
+      {/* 👇 CI/CD demo text added for Assignment 4 */}
+      <p
+        style={{
+          textAlign: "center",
+          marginTop: 8,
+          marginBottom: 20,
+          fontStyle: "italic",
+        }}
+      >
+        This page was updated as part of the CI/CD demonstration (December
+        2025).
+      </p>
 
       {/* Form section */}
       <form onSubmit={handleSubmit}>
