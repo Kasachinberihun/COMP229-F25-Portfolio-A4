@@ -1,4 +1,4 @@
-# COMP229 - Fall 2025 - Portfolio Assignment 3
+# COMP229 - Fall 2025 - Portfolio Assignment 4
 
 This repository contains the completed frontend and backend code
 for Assignment 3 of COMP229.
